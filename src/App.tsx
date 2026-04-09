@@ -1,6 +1,46 @@
 import { useState } from "react";
 
-const PHASES = [
+interface Phase {
+  id: number;
+  title: string;
+  subtitle: string;
+  color: string;
+  light: string;
+  border: string;
+  text: string;
+  tag: string;
+}
+
+interface Endpoint {
+  method: string;
+  path: string;
+  who: string;
+  why: string;
+  how: string;
+}
+
+interface Section {
+  title: string;
+  who: string;
+  what: string;
+  endpoints: Endpoint[];
+  links: string;
+}
+
+interface SchemaItem {
+  table: string;
+  key_fields: string;
+  why: string;
+}
+
+interface ContentItem {
+  why: string;
+  sections: Section[];
+  schema: SchemaItem[];
+  gateNote: string;
+}
+
+const PHASES: Phase[] = [
   {
     id: 1,
     title: "Phase 1",
@@ -53,7 +93,7 @@ const PHASES = [
   },
 ];
 
-const CONTENT = {
+const CONTENT: Record<number, ContentItem> = {
   1: {
     why: `Phase 1 is the data foundation for everything that follows. Every metric, every enforcement gate, every AI Coworker output in Phase 5 is only as good as the data produced here. If tasks aren't logged accurately, performance metrics are meaningless. If clock-ins aren't tied to geolocation, attendance data is untrustworthy. If approvals aren't routed correctly, financial compliance breaks down.
 
@@ -964,7 +1004,7 @@ export default function TeamGuide() {
   const [activePhase, setActivePhase] = useState(1);
   const [activeSection, setActiveSection] = useState(0);
   const [showSchema, setShowSchema] = useState(false);
-  const [expandedEndpoint, setExpandedEndpoint] = useState(null);
+  const [expandedEndpoint, setExpandedEndpoint] = useState<string | null>(null);
 
   const phase = PHASES[activePhase - 1];
   const content = CONTENT[activePhase];
@@ -984,7 +1024,7 @@ export default function TeamGuide() {
 
       {/* Phase Tabs */}
       <div className="flex gap-1.5 p-3 bg-white border-b overflow-x-auto">
-        {PHASES.map((p) => (
+        {PHASES.map((p: Phase) => (
           <button
             key={p.id}
             onClick={() => {
@@ -1019,7 +1059,7 @@ export default function TeamGuide() {
           >
             Why This Phase?
           </button>
-          {content.sections.map((s, i) => (
+          {content.sections.map((s: Section, i: number) => (
             <button
               key={i}
               onClick={() => {
@@ -1077,7 +1117,7 @@ export default function TeamGuide() {
                 Schema Tables — Phase {activePhase}
               </h2>
               <div className="space-y-3">
-                {content.schema.map((s, i) => (
+                {content.schema.map((s: SchemaItem, i: number) => (
                   <div
                     key={i}
                     className="bg-white rounded-lg p-4 border border-gray-200"
@@ -1126,7 +1166,7 @@ export default function TeamGuide() {
                     Endpoints
                   </p>
                   <div className="space-y-2">
-                    {section.endpoints.map((ep, i) => (
+                    {section.endpoints.map((ep: Endpoint, i: number) => (
                       <div
                         key={i}
                         className="bg-white rounded-lg border border-gray-200 overflow-hidden"
